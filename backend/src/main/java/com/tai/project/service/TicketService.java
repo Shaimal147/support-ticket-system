@@ -3,6 +3,7 @@ package com.tai.project.service;
 import com.tai.project.dto.TicketDto;
 import com.tai.project.repository.TicketRepository;
 import com.tai.project.entity.TicketEntity;
+import com.tai.project.enums.TicketStatus;
 
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,10 @@ public class TicketService {
 
         ticketEntity.setTitle(dto.getTitle());
         ticketEntity.setDescription(dto.getDescription());
+        ticketEntity.setStatus(TicketStatus.OPEN);
 
         ticketRepository.save(ticketEntity);
-        
+
         return "Ticket created successfully!";
     }
 }
