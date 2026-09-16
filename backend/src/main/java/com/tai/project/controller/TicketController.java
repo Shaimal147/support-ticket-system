@@ -4,7 +4,7 @@ package com.tai.project.controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tai.project.dto.TicketDto;
+import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.service.TicketService;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +24,7 @@ public class TicketController {
     }
 
     @PostMapping("/tickets")
-    public String createTicket(@RequestBody TicketDto dto) {
+    public String createTicket(@RequestBody CreateTicketDto dto) {
         return ticketService.createTicket(dto);
     }
 }

@@ -1,6 +1,6 @@
 package com.tai.project.service;
 
-import com.tai.project.dto.TicketDto;
+import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.repository.TicketRepository;
 import com.tai.project.entity.TicketEntity;
 import com.tai.project.enums.TicketStatus;
@@ -15,12 +15,14 @@ public class TicketService {
         this.ticketRepository = ticketRepository;
     }
 
-    public String createTicket(TicketDto dto) {
+    public String createTicket(CreateTicketDto createTicketDto) {
         TicketEntity ticketEntity = new TicketEntity();
 
-        ticketEntity.setTitle(dto.getTitle());
-        ticketEntity.setDescription(dto.getDescription());
+        ticketEntity.setTitle(createTicketDto.getTitle());
+        ticketEntity.setDescription(createTicketDto.getDescription());
         ticketEntity.setStatus(TicketStatus.OPEN);
+        ticketEntity.setPriority(createTicketDto.getPriority());
+        ticketEntity.setCreatedBy(createTicketDto.getCreatedBy());
 
         ticketRepository.save(ticketEntity);
 
