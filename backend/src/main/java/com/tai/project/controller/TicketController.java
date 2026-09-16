@@ -1,0 +1,30 @@
+package com.tai.project.controller;
+
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tai.project.dto.TicketDto;
+import com.tai.project.service.TicketService;
+
+import org.springframework.web.bind.annotation.RequestBody;
+
+@RestController
+@RequestMapping("/")
+public class TicketController {
+    private final TicketService ticketService;
+
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
+    }
+
+    @GetMapping()
+    public String testFunction() {
+        return "Hello World";
+    }
+
+    @PostMapping("/tickets")
+    public String createTicket(@RequestBody TicketDto dto) {
+        return ticketService.createTicket(dto);
+    }
+}
