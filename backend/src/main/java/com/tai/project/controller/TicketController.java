@@ -1,17 +1,15 @@
 package com.tai.project.controller;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.dto.GetTicketDto;
 import com.tai.project.dto.UpdateTicketStatusDto;
 import com.tai.project.dto.UpdateTicketPriorityDto;
+import com.tai.project.dto.AddCommentDto;
 import com.tai.project.service.TicketService;
 
 import java.util.List;
-
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/")
@@ -27,11 +25,6 @@ public class TicketController {
         return "Hello World";
     }
 
-    @PostMapping("/tickets")
-    public String createTicket(@RequestBody CreateTicketDto dto) {
-        return ticketService.createTicket(dto);
-    }
-
     @GetMapping("/tickets/{id}")
     public GetTicketDto getTicket(@PathVariable Long id) {
         return ticketService.getTicket(id);
@@ -41,6 +34,16 @@ public class TicketController {
     public List<GetTicketDto> getTickets() {
         return ticketService.getTickets();
     }
+
+    @PostMapping("/tickets")
+    public String createTicket(@RequestBody CreateTicketDto dto) {
+        return ticketService.createTicket(dto);
+    }
+
+    @PostMapping("/tickets/{id}/comments")
+    public String addComment(@PathVariable Long id, @RequestBody AddCommentDto addCommentDto) {
+        return ticketService.addComment(id, addCommentDto);
+    } 
 
     @PutMapping("/tickets/{id}/status")
     public String updateTicketStatus(@PathVariable Long id, @RequestBody UpdateTicketStatusDto updateTicketStatusDto) {

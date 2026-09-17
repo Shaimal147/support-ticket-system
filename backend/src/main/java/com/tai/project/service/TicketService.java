@@ -4,9 +4,16 @@ import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.dto.GetTicketDto;
 import com.tai.project.dto.UpdateTicketStatusDto;
 import com.tai.project.dto.UpdateTicketPriorityDto;
+import com.tai.project.dto.AddCommentDto;
+
+import com.tai.project.repository.CommentRepository;
 import com.tai.project.repository.TicketRepository;
+
 import com.tai.project.entity.TicketEntity;
+import com.tai.project.entity.CommentEntity;
+
 import com.tai.project.enums.TicketStatus;
+
 import com.tai.project.exception.ResourceNotFoundException;
 
 import java.util.ArrayList;
@@ -17,9 +24,13 @@ import org.springframework.stereotype.Service;
 @Service 
 public class TicketService {
     private final TicketRepository ticketRepository;
+    private final CommentRepository commentRepository;
 
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(
+        TicketRepository ticketRepository, CommentRepository commentRepository
+    ) {
         this.ticketRepository = ticketRepository;
+        this.commentRepository = commentRepository;
     }
 
     public String createTicket(CreateTicketDto createTicketDto) {
@@ -109,5 +120,20 @@ public class TicketService {
 
         ticketRepository.deleteById(id);
         return "Successfully deleted";
+    }
+
+    public String addComment(Long id, AddCommentDto addCommentDto) {
+        CommentEntity commentEntity = new CommentEntity();
+        TicketEntity ticketEntity = ticketRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
+        );
+
+        commentEntity.setContent(addCommentDto.getContent());
+        commentEntity.setAuthor(addCommentDto.getAuthor());
+        commentEntity.setTicketId(ticketEntity);
+
+        commentRepository.save(commentEntity);
+
+        return "Comment successfully added.";
     }
 }
