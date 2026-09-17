@@ -2,7 +2,7 @@ package com.tai.project.service;
 
 import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.dto.GetTicketDto;
-import com.tai.project.dto.UpdateTicketDto;
+import com.tai.project.dto.UpdateTicketStatusDto;
 import com.tai.project.repository.TicketRepository;
 import com.tai.project.entity.TicketEntity;
 import com.tai.project.enums.TicketStatus;
@@ -79,12 +79,12 @@ public class TicketService {
         }
     }
 
-    public String updateTicketStatus(Long id, UpdateTicketDto updateTicketDto) {
+    public String updateTicketStatus(Long id, UpdateTicketStatusDto updateTicketStatusDto) {
         TicketEntity entity = ticketRepository.findById(id).orElseThrow(
              () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
         );
 
-        entity.setStatus(updateTicketDto.getStatus());
+        entity.setStatus(updateTicketStatusDto.getStatus());
         ticketRepository.save(entity);
 
         return "Status changed Successfully";
