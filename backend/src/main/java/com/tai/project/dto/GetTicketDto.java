@@ -1,59 +1,27 @@
-package com.tai.project.entity;
+package com.tai.project.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-import com.tai.project.enums.TicketStatus;
-import com.tai.project.enums.TicketPriority;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
-@Entity 
-@Table(name = "tickets")
-public class TicketEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private Long id;
+import com.tai.project.enums.TicketPriority;
+import com.tai.project.enums.TicketStatus;
 
+public class GetTicketDto {
+    private Long id;
     private String title;
     private String description;
-
-    @Enumerated(EnumType.STRING)
     private TicketStatus status;
-
-    @Enumerated(EnumType.STRING)
     private TicketPriority priority;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @Column(name = "created_by")
     private String createdBy;
 
-    public TicketEntity() {
-        
-    }
-    
     public Long getId() {
         return id;
     }
 
     public String getTitle() {
         return title;
-    } 
+    }
 
     public String getDescription() {
         return description;
@@ -79,6 +47,10 @@ public class TicketEntity {
         return createdBy;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -93,6 +65,14 @@ public class TicketEntity {
 
     public void setPriority(TicketPriority priority) {
         this.priority = priority;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    } 
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public void setCreatedBy(String createdBy) {
