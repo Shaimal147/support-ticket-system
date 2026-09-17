@@ -26,7 +26,7 @@ public class CommentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id", nullable = false)
-    private TicketEntity ticketId;
+    private TicketEntity ticket;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -45,7 +45,7 @@ public class CommentEntity {
     }
 
     public TicketEntity getTicketId() {
-        return ticketId;
+        return ticket;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -60,7 +60,7 @@ public class CommentEntity {
         this.author = author;
     }
 
-    public void setTicketId(TicketEntity ticketId) {
-        this.ticketId = ticketId;
+    public void setTicket(TicketEntity ticket) {
+        this.ticket = ticket;
     }
 }

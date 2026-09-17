@@ -130,7 +130,7 @@ public class TicketService {
 
         commentEntity.setContent(addCommentDto.getContent());
         commentEntity.setAuthor(addCommentDto.getAuthor());
-        commentEntity.setTicketId(ticketEntity);
+        commentEntity.setTicket(ticketEntity);
 
         commentRepository.save(commentEntity);
 
