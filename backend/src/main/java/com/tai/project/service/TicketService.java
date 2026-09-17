@@ -7,6 +7,9 @@ import com.tai.project.entity.TicketEntity;
 import com.tai.project.enums.TicketStatus;
 import com.tai.project.exception.ResourceNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service 
@@ -47,5 +50,31 @@ public class TicketService {
         getTicketDto.setCreatedBy(entity.getCreatedBy());
 
         return getTicketDto;
+    }
+
+    public List<GetTicketDto> getTickets() {
+        List<GetTicketDto> tickets = new ArrayList<>();
+        List<TicketEntity> entities = ticketRepository.findAll();
+
+        for (TicketEntity entity : entities) {
+            GetTicketDto getTicketDto = new GetTicketDto();
+
+            getTicketDto.setId(entity.getId());
+            getTicketDto.setTitle(entity.getTitle());
+            getTicketDto.setDescription(entity.getDescription());
+            getTicketDto.setStatus(entity.getStatus());
+            getTicketDto.setPriority(entity.getPriority());
+            getTicketDto.setCreatedAt(entity.getCreatedAt());
+            getTicketDto.setUpdatedAt(entity.getUpdatedAt());
+            getTicketDto.setCreatedBy(entity.getCreatedBy());
+
+            tickets.add(getTicketDto);
+        }
+
+        if (tickets != null && !tickets.isEmpty()) {
+            return tickets;
+        } else {
+            throw new ResourceNotFoundException("No Tickets found.");
+        }
     }
 }
