@@ -101,4 +101,13 @@ public class TicketService {
 
         return "Priority changed successfully";
     }
+
+    public String deleteTicket(Long id) {
+        if (!ticketRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id));
+        };
+
+        ticketRepository.deleteById(id);
+        return "Successfully deleted";
+    }
 }

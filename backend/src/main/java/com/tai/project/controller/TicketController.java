@@ -51,4 +51,9 @@ public class TicketController {
     public String updateTicketPriority(@PathVariable Long id, @RequestBody UpdateTicketPriorityDto updateTicketPriorityDto) {
         return ticketService.updateTicketPriority(id, updateTicketPriorityDto);
     }
+
+    @DeleteMapping("/tickets/{id}")
+    public String deleteTicket(@PathVariable Long id) {
+        return ticketService.deleteTicket(id);
+    }
 }
