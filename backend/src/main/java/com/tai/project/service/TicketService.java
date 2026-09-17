@@ -3,6 +3,7 @@ package com.tai.project.service;
 import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.dto.GetTicketDto;
 import com.tai.project.dto.UpdateTicketStatusDto;
+import com.tai.project.dto.UpdateTicketPriorityDto;
 import com.tai.project.repository.TicketRepository;
 import com.tai.project.entity.TicketEntity;
 import com.tai.project.enums.TicketStatus;
@@ -88,5 +89,16 @@ public class TicketService {
         ticketRepository.save(entity);
 
         return "Status changed Successfully";
+    }
+
+    public String updateTicketPriority(Long id, UpdateTicketPriorityDto updateTicketPriorityDto) {
+        TicketEntity entity = ticketRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
+        );
+
+        entity.setPriority(updateTicketPriorityDto.getPriority());
+        ticketRepository.save(entity);
+
+        return "Priority changed successfully";
     }
 }
