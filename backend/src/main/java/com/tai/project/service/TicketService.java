@@ -5,6 +5,7 @@ import com.tai.project.dto.GetTicketDto;
 import com.tai.project.repository.TicketRepository;
 import com.tai.project.entity.TicketEntity;
 import com.tai.project.enums.TicketStatus;
+import com.tai.project.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,9 @@ public class TicketService {
     }
 
     public GetTicketDto getTicket(Long id) {
-        TicketEntity entity = ticketRepository.findById(id).orElse(null);
+        TicketEntity entity = ticketRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
+        );
         GetTicketDto getTicketDto = new GetTicketDto();
 
         getTicketDto.setId(entity.getId());
