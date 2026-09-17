@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.dto.GetTicketDto;
+import com.tai.project.dto.UpdateTicketDto;
 import com.tai.project.service.TicketService;
 
 import java.util.List;
@@ -38,5 +39,10 @@ public class TicketController {
     @GetMapping("/tickets")
     public List<GetTicketDto> getTickets() {
         return ticketService.getTickets();
+    }
+
+    @PutMapping("/tickets/{id}/status")
+    public String updateTicketStatus(@PathVariable Long id, @RequestBody UpdateTicketDto updateTicketDto) {
+        return ticketService.updateTicketStatus(id, updateTicketDto);
     }
 }

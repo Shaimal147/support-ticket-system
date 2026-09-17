@@ -2,6 +2,7 @@ package com.tai.project.service;
 
 import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.dto.GetTicketDto;
+import com.tai.project.dto.UpdateTicketDto;
 import com.tai.project.repository.TicketRepository;
 import com.tai.project.entity.TicketEntity;
 import com.tai.project.enums.TicketStatus;
@@ -71,10 +72,21 @@ public class TicketService {
             tickets.add(getTicketDto);
         }
 
-        if (tickets != null && !tickets.isEmpty()) {
+        if (!tickets.isEmpty()) {
             return tickets;
         } else {
             throw new ResourceNotFoundException("No Tickets found.");
         }
+    }
+
+    public String updateTicketStatus(Long id, UpdateTicketDto updateTicketDto) {
+        TicketEntity entity = ticketRepository.findById(id).orElseThrow(
+             () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
+        );
+
+        entity.setStatus(updateTicketDto.getStatus());
+        ticketRepository.save(entity);
+
+        return "Status changed Successfully";
     }
 }
