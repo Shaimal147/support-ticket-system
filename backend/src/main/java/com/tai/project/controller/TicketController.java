@@ -7,6 +7,8 @@ import com.tai.project.dto.GetTicketDto;
 import com.tai.project.dto.UpdateTicketStatusDto;
 import com.tai.project.dto.UpdateTicketPriorityDto;
 import com.tai.project.dto.AddCommentDto;
+import com.tai.project.dto.GetCommentsDto;
+
 import com.tai.project.service.TicketService;
 
 import java.util.List;
@@ -34,6 +36,11 @@ public class TicketController {
     public List<GetTicketDto> getTickets() {
         return ticketService.getTickets();
     }
+
+    @GetMapping("/tickets/{id}/comments")
+    public List<GetCommentsDto> getComments(@PathVariable Long id) {
+        return ticketService.getComments(id);
+    } 
 
     @PostMapping("/tickets")
     public String createTicket(@RequestBody CreateTicketDto dto) {

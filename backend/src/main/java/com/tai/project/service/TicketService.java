@@ -1,6 +1,7 @@
 package com.tai.project.service;
 
 import com.tai.project.dto.CreateTicketDto;
+import com.tai.project.dto.GetCommentsDto;
 import com.tai.project.dto.GetTicketDto;
 import com.tai.project.dto.UpdateTicketStatusDto;
 import com.tai.project.dto.UpdateTicketPriorityDto;
@@ -89,6 +90,29 @@ public class TicketService {
         } else {
             throw new ResourceNotFoundException("No Tickets found.");
         }
+    }
+
+    public List<GetCommentsDto> getComments(Long id) {
+        List<GetCommentsDto> comments = new ArrayList<>();
+
+        TicketEntity ticket = ticketRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
+        );
+
+        List<CommentEntity> commentEntities = commentRepository.findByticket(ticket);
+
+        for (CommentEntity commentEntity : commentEntities) {
+            GetCommentsDto comment = new GetCommentsDto();
+
+            comment.setAuthor(commentEntity.getAuthor());
+            comment.setContent(commentEntity.getContent());
+            comment.setCreatedAt(commentEntity.getCreatedAt());
+
+            comments.add(comment);
+        }
+
+        return comments;
+
     }
 
     public String updateTicketStatus(Long id, UpdateTicketStatusDto updateTicketStatusDto) {
