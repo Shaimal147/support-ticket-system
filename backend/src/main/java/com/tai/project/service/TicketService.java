@@ -12,7 +12,7 @@ import com.tai.project.repository.TicketRepository;
 
 import com.tai.project.entity.TicketEntity;
 import com.tai.project.entity.CommentEntity;
-
+import com.tai.project.enums.TicketPriority;
 import com.tai.project.enums.TicketStatus;
 
 import com.tai.project.exception.ResourceNotFoundException;
@@ -66,9 +66,22 @@ public class TicketService {
         return getTicketDto;
     }
 
-    public List<GetTicketDto> getTickets() {
+    public List<GetTicketDto> getTickets(TicketStatus status, TicketPriority priority) {
         List<GetTicketDto> tickets = new ArrayList<>();
-        List<TicketEntity> entities = ticketRepository.findAll();
+        List<TicketEntity> entities;
+
+        if (status == null && priority == null) {
+            entities = ticketRepository.findAll();
+        } 
+        else if (status != null && priority == null) {
+            entities = ticketRepository.findByStatus(status);
+        }
+        else if (status == null && priority != null) {
+            entities = ticketRepository.findByPriority(priority);
+        }
+        else {
+            entities = ticketRepository.findByStatusAndPriority(status, priority);
+        }
 
         for (TicketEntity entity : entities) {
             GetTicketDto getTicketDto = new GetTicketDto();
@@ -99,7 +112,7 @@ public class TicketService {
             () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
         );
 
-        List<CommentEntity> commentEntities = commentRepository.findByticket(ticket);
+        List<CommentEntity> commentEntities = commentRepository.findByTicket(ticket);
 
         for (CommentEntity commentEntity : commentEntities) {
             GetCommentsDto comment = new GetCommentsDto();

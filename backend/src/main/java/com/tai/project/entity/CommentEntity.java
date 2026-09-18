@@ -44,7 +44,7 @@ public class CommentEntity {
         return author;
     }
 
-    public TicketEntity getTicketId() {
+    public TicketEntity getTicket() {
         return ticket;
     }
 

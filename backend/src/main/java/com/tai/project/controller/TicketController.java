@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import com.tai.project.dto.CreateTicketDto;
 import com.tai.project.dto.GetTicketDto;
 import com.tai.project.dto.UpdateTicketStatusDto;
+import com.tai.project.enums.TicketPriority;
+import com.tai.project.enums.TicketStatus;
 import com.tai.project.dto.UpdateTicketPriorityDto;
 import com.tai.project.dto.AddCommentDto;
 import com.tai.project.dto.GetCommentsDto;
@@ -12,6 +14,7 @@ import com.tai.project.dto.GetCommentsDto;
 import com.tai.project.service.TicketService;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/")
@@ -33,8 +36,11 @@ public class TicketController {
     }
 
     @GetMapping("/tickets")
-    public List<GetTicketDto> getTickets() {
-        return ticketService.getTickets();
+    public List<GetTicketDto> getTickets(
+        @RequestParam(required = false) TicketStatus status,
+        @RequestParam(required = false) TicketPriority priority 
+    ) {
+        return ticketService.getTickets(status, priority);
     }
 
     @GetMapping("/tickets/{id}/comments")
