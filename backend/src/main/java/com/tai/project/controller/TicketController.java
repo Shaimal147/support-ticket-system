@@ -1,5 +1,6 @@
 package com.tai.project.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import com.tai.project.dto.CreateTicketDto;
@@ -36,11 +37,13 @@ public class TicketController {
     }
 
     @GetMapping("/tickets")
-    public List<GetTicketDto> getTickets(
+    public Page<GetTicketDto> getTickets(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size,
         @RequestParam(required = false) TicketStatus status,
         @RequestParam(required = false) TicketPriority priority 
     ) {
-        return ticketService.getTickets(status, priority);
+        return ticketService.getTickets(page, size, status, priority);
     }
 
     @GetMapping("/tickets/{id}/comments")

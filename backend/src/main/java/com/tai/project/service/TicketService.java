@@ -20,6 +20,10 @@ import com.tai.project.exception.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service 
@@ -66,24 +70,25 @@ public class TicketService {
         return getTicketDto;
     }
 
-    public List<GetTicketDto> getTickets(TicketStatus status, TicketPriority priority) {
-        List<GetTicketDto> tickets = new ArrayList<>();
-        List<TicketEntity> entities;
+    public Page<GetTicketDto> getTickets(int page, int size, TicketStatus status, TicketPriority priority) {
+        Page<TicketEntity> entities;
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         if (status == null && priority == null) {
-            entities = ticketRepository.findAll();
+            entities = ticketRepository.findAll(pageable);
         } 
         else if (status != null && priority == null) {
-            entities = ticketRepository.findByStatus(status);
+            entities = ticketRepository.findByStatus(status, pageable);
         }
         else if (status == null && priority != null) {
-            entities = ticketRepository.findByPriority(priority);
+            entities = ticketRepository.findByPriority(priority, pageable);
         }
         else {
-            entities = ticketRepository.findByStatusAndPriority(status, priority);
+            entities = ticketRepository.findByStatusAndPriority(status, priority, pageable);
         }
 
-        for (TicketEntity entity : entities) {
+        Page<GetTicketDto> tickets = entities.map(entity -> {
             GetTicketDto getTicketDto = new GetTicketDto();
 
             getTicketDto.setId(entity.getId());
@@ -95,8 +100,8 @@ public class TicketService {
             getTicketDto.setUpdatedAt(entity.getUpdatedAt());
             getTicketDto.setCreatedBy(entity.getCreatedBy());
 
-            tickets.add(getTicketDto);
-        }
+            return getTicketDto;
+        });
 
         if (!tickets.isEmpty()) {
             return tickets;
