@@ -3,10 +3,10 @@ package com.tai.project.repository;
 import com.tai.project.entity.CommentEntity;
 import com.tai.project.entity.TicketEntity;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Long>{
-    List<CommentEntity> findByTicket(TicketEntity ticket);
+    Page<CommentEntity> findByTicket(TicketEntity ticket, Pageable pageable);
 }

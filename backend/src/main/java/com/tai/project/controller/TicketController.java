@@ -14,8 +14,6 @@ import com.tai.project.dto.GetCommentsDto;
 
 import com.tai.project.service.TicketService;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/")
@@ -47,8 +45,12 @@ public class TicketController {
     }
 
     @GetMapping("/tickets/{id}/comments")
-    public List<GetCommentsDto> getComments(@PathVariable Long id) {
-        return ticketService.getComments(id);
+    public Page<GetCommentsDto> getComments(
+        @PathVariable Long id,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        return ticketService.getComments(id, page, size);
     } 
 
     @PostMapping("/tickets")

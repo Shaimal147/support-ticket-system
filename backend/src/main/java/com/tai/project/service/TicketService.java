@@ -17,9 +17,6 @@ import com.tai.project.enums.TicketStatus;
 
 import com.tai.project.exception.ResourceNotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
@@ -110,24 +107,30 @@ public class TicketService {
         }
     }
 
-    public List<GetCommentsDto> getComments(Long id) {
-        List<GetCommentsDto> comments = new ArrayList<>();
+    public Page<GetCommentsDto> getComments(Long id, int page, int size) {
+        Page<GetCommentsDto> comments;
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(
+            page,
+            size,
+            sort
+        );
 
         TicketEntity ticket = ticketRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
         );
 
-        List<CommentEntity> commentEntities = commentRepository.findByTicket(ticket);
+        Page<CommentEntity> commentEntities = commentRepository.findByTicket(ticket, pageable);
 
-        for (CommentEntity commentEntity : commentEntities) {
-            GetCommentsDto comment = new GetCommentsDto();
+        comments = commentEntities.map(comment -> {
+            GetCommentsDto getCommentDto = new GetCommentsDto();
 
-            comment.setAuthor(commentEntity.getAuthor());
-            comment.setContent(commentEntity.getContent());
-            comment.setCreatedAt(commentEntity.getCreatedAt());
+            getCommentDto.setAuthor(comment.getAuthor());
+            getCommentDto.setContent(comment.getContent());
+            getCommentDto.setCreatedAt(comment.getCreatedAt());
 
-            comments.add(comment);
-        }
+            return getCommentDto;
+        });
 
         return comments;
 
