@@ -13,16 +13,16 @@ createTicketBtn.addEventListener("click", () => {
     renderTicketForm();
 })
 
-async function getTickets(status = null, priority = null, page = 0) {
+async function getTickets(status = "", priority = "", page = 0) {
     try {
         const params = {
             page: page,
             size: 20
         }
-        if (status && status != "") {
+        if (status != "") {
             params.status = status;
         }
-        if (priority && priority != "") {
+        if (priority != "") {
             params.priority = priority;
         }
         const response = await axios.get(
@@ -36,6 +36,7 @@ async function getTickets(status = null, priority = null, page = 0) {
         console.log(response.data);
     } catch (error) {
         console.error("Error: ", error.message);
+        ticketsEl.innerHTML = "";
     }
 }
 
@@ -125,11 +126,19 @@ function renderTickets(tickets, status, priority) {
      ticketsEl.innerHTML = "";
 
      ticketsFilterByStatus = document.createElement("select");
+     ticketsFilterByPriority = document.createElement("select");
+
      filterStatusOption0 = document.createElement("option");
      filterStatusOption1 = document.createElement("option");
      filterStatusOption2 = document.createElement("option");
      filterStatusOption3 = document.createElement("option");
      filterStatusOption4 = document.createElement("option");
+
+     filterPriorityOption0 = document.createElement("option");
+     filterPriorityOption1 = document.createElement("option");
+     filterPriorityOption2 = document.createElement("option");
+     filterPriorityOption3 = document.createElement("option");
+     filterPriorityOption4 = document.createElement("option");
 
      filterStatusOption0.value = "";
      filterStatusOption0.textContent = "No filter";
@@ -146,15 +155,43 @@ function renderTickets(tickets, status, priority) {
      filterStatusOption4.value = "CLOSED";
      filterStatusOption4.textContent = "Closed";
 
+     filterPriorityOption0.value = "";
+     filterPriorityOption0.textContent = "No filter";
+
+     filterPriorityOption1.value = "LOW";
+     filterPriorityOption1.textContent = "Low";
+
+     filterPriorityOption2.value = "MEDIUM";
+     filterPriorityOption2.textContent = "Medium";
+
+     filterPriorityOption3.value = "HIGH";
+     filterPriorityOption3.textContent = "High";
+
+     filterPriorityOption4.value = "URGENT";
+     filterPriorityOption4.textContent = "Urgent";
+
      ticketsEl.appendChild(ticketsFilterByStatus);
+     ticketsEl.appendChild(ticketsFilterByPriority);
      ticketsFilterByStatus.appendChild(filterStatusOption0);
      ticketsFilterByStatus.appendChild(filterStatusOption1);
      ticketsFilterByStatus.appendChild(filterStatusOption2);
      ticketsFilterByStatus.appendChild(filterStatusOption3);
      ticketsFilterByStatus.appendChild(filterStatusOption4);
+     ticketsFilterByPriority.appendChild(filterPriorityOption0);
+     ticketsFilterByPriority.appendChild(filterPriorityOption1);
+     ticketsFilterByPriority.appendChild(filterPriorityOption2);
+     ticketsFilterByPriority.appendChild(filterPriorityOption3);
+     ticketsFilterByPriority.appendChild(filterPriorityOption4);
+
+     ticketsFilterByStatus.value = status;
+     ticketsFilterByPriority.value = priority;
 
      ticketsFilterByStatus.addEventListener("change", () => {
-        getTickets(ticketsFilterByStatus.value);
+        getTickets(ticketsFilterByStatus.value, ticketsFilterByPriority.value);
+     })
+
+     ticketsFilterByPriority.addEventListener("change", () => {
+        getTickets(ticketsFilterByStatus.value, ticketsFilterByPriority.value);
      })
 
     for (const item of tickets) {
