@@ -42,6 +42,20 @@ async function createTicket(title, desciption, priority, createdBy) {
     }
 }
 
+async function updateTicketStatus(ticketId, status) {
+    try {
+        const response = await axios.put(
+            `http://localhost:8080/tickets/${ticketId}/status`,
+            {
+                status: status
+            }
+        );
+        console.log(response.data);
+    } catch (error) {
+        console.log("Error: ", error.message);
+    }
+}
+
 function renderTickets(tickets) {
      ticketsEl.innerHTML = "";
 
@@ -49,21 +63,47 @@ function renderTickets(tickets) {
         const ticketTitle = document.createElement("h2");
         const ticketDescription = document.createElement("p");
         const ticketPriority = document.createElement("p");
-        const ticketStatus = document.createElement("p");
+        const ticketStatus = document.createElement("select");
+        const statusOption1 = document.createElement("option");
+        const statusOption2 = document.createElement("option");
+        const statusOption3 = document.createElement("option");
+        const statusOption4 = document.createElement("option");
         const ticketCreatedAt = document.createElement("p");
+
+        statusOption1.value = "OPEN";
+        statusOption1.textContent = "Open";
+
+        statusOption2.value = "IN_PROGRESS";
+        statusOption2.textContent = "In_Progress";
+
+        statusOption3.value = "RESOLVED";
+        statusOption3.textContent = "Resolved";
+
+        statusOption4.value = "CLOSED";
+        statusOption4.textContent = "Closed";
 
         ticketTitle.textContent = `Title: ${item.title}`;
         ticketDescription.textContent = `Description: ${item.description}`;
         ticketPriority.textContent = `Priority: ${item.priority}`;
-        ticketStatus.textContent = `Status: ${item.status}`;
         ticketCreatedAt.textContent = `Created at: ${item.createdAt}`;
 
         ticketsEl.appendChild(ticketTitle);
         ticketsEl.appendChild(ticketDescription);
         ticketsEl.appendChild(ticketPriority);
         ticketsEl.appendChild(ticketStatus);
+        ticketStatus.appendChild(statusOption1);
+        ticketStatus.appendChild(statusOption2);
+        ticketStatus.appendChild(statusOption3);
+        ticketStatus.appendChild(statusOption4);
+
+        ticketStatus.value = item.status;
+        
         ticketsEl.appendChild(ticketCreatedAt);
         ticketsEl.appendChild(document.createElement("hr"));
+
+        ticketStatus.addEventListener("change", () => {
+        updateTicketStatus(item.id, ticketStatus.value);
+        })
     }
 }
 
