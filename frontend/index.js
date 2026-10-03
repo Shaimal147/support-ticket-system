@@ -32,7 +32,7 @@ async function getTickets(status = null, priority = null, page = 0) {
             }
         );
         renderTickets(response.data.content, status, priority);
-        renderPagination(response.data);
+        renderPagination(response.data, status, priority);
         console.log(response.data);
     } catch (error) {
         console.error("Error: ", error.message);
@@ -131,8 +131,8 @@ function renderTickets(tickets, status, priority) {
      filterStatusOption3 = document.createElement("option");
      filterStatusOption4 = document.createElement("option");
 
-     filterStatusOption1.value = "";
-     filterStatusOption1.textContent = "No filter";
+     filterStatusOption0.value = "";
+     filterStatusOption0.textContent = "No filter";
 
      filterStatusOption1.value = "OPEN";
      filterStatusOption1.textContent = "Open";
@@ -148,7 +148,6 @@ function renderTickets(tickets, status, priority) {
 
      ticketsEl.appendChild(ticketsFilterByStatus);
      ticketsFilterByStatus.appendChild(filterStatusOption0);
-     ticketsFilterByStatus.appendChild(filterStatusOption1);
      ticketsFilterByStatus.appendChild(filterStatusOption1);
      ticketsFilterByStatus.appendChild(filterStatusOption2);
      ticketsFilterByStatus.appendChild(filterStatusOption3);
@@ -242,7 +241,7 @@ function renderTickets(tickets, status, priority) {
     }
 }
 
-function renderPagination(pagination) {
+function renderPagination(pagination, status, priority) {
     paginationEl.innerHTML = "";
 
     const prevButton = document.createElement("button");
@@ -252,7 +251,7 @@ function renderPagination(pagination) {
     prevButton.disabled = pagination.first;
 
     prevButton.addEventListener("click", () => {
-        getTickets(pagination.number - 1);
+        getTickets(status, priority, pagination.number - 1);
     });
 
     const nextButton = document.createElement("button");
@@ -262,7 +261,7 @@ function renderPagination(pagination) {
     nextButton.disabled = pagination.last;
 
     nextButton.addEventListener("click", () => {
-        getTickets(pagination.number + 1);
+        getTickets(status, priority, pagination.number + 1);
     });
 
 }
