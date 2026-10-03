@@ -80,6 +80,16 @@ async function updateTicketPriority(ticketId, priority) {
     }
 }
 
+async function getComments(ticketId, commentsEl, page = 0) {
+    try {
+        const response = await axios.get(`http://localhost:8080/tickets/${ticketId}/comments`);
+        console.log(response.data);
+        renderComments(response.data.content, commentsEl);
+    } catch (error) {
+        console.log("Error: ", error.message);
+    }
+}
+
 function renderTickets(tickets) {
      ticketsEl.innerHTML = "";
 
@@ -97,6 +107,7 @@ function renderTickets(tickets) {
         const statusOption3 = document.createElement("option");
         const statusOption4 = document.createElement("option");
         const ticketCreatedAt = document.createElement("p");
+        const commentsEl = document.createElement("div");
         const ticketDeleteBtn = document.createElement("button")
 
         statusOption1.value = "OPEN";
@@ -145,6 +156,10 @@ function renderTickets(tickets) {
         ticketPriority.value = item.priority;
 
         ticketsEl.appendChild(ticketCreatedAt);
+        ticketsEl.appendChild(commentsEl);
+
+        getComments(item.id, commentsEl);
+
         ticketsEl.appendChild(ticketDeleteBtn);
         ticketsEl.appendChild(document.createElement("hr"));
 
@@ -277,4 +292,22 @@ function renderTicketForm() {
             name.value
         );
     })
+}
+
+function renderComments(comments, commentsEl) {
+    commentsEl.innerHTML = "";
+
+    for (const comment of comments) {
+        const commentAuthor = document.createElement("h3");
+        const commentContent = document.createElement("p");
+        const commentCreatedAt = document.createElement("p");
+
+        commentAuthor.textContent = `Author: ${comment.author}`;
+        commentContent.textContent = `Content: ${comment.content}`;
+        commentCreatedAt.textContent = `Created at: ${comment.createdAt}`;
+
+        commentsEl.appendChild(commentAuthor);
+        commentsEl.appendChild(commentContent);
+        commentsEl.appendChild(commentCreatedAt);
+    }
 }
