@@ -90,6 +90,22 @@ async function getComments(ticketId, commentsEl, page = 0) {
     }
 }
 
+async function createComment(ticketId, content, author, commentsEl) {
+    try {
+        const response = await axios.post(
+            `http://localhost:8080/tickets/${ticketId}/comments`,
+            {
+                content: content,
+                author: author
+            }
+        );
+        console.log(response.data);
+        getComments(ticketId, commentsEl, page = 0);
+    } catch (error) {
+        console.log("Error: ", error.message);
+    }
+}
+
 function renderTickets(tickets) {
      ticketsEl.innerHTML = "";
 
@@ -300,6 +316,8 @@ function renderTicketForm() {
 function renderComments(ticketId, comments, commentsEl, page) {
     commentsEl.innerHTML = "";
 
+    const newComment = document.createElement("input");
+    const submitNewCommentBtn = document.createElement("button");
     const prevButton = document.createElement("button");
     const nextButton = document.createElement("button");
 
@@ -317,6 +335,11 @@ function renderComments(ticketId, comments, commentsEl, page) {
         commentsEl.appendChild(commentCreatedAt);
     }
 
+    commentsEl.appendChild(newComment);
+    commentsEl.appendChild(submitNewCommentBtn);
+
+    newComment.placeholder = "Enter new comment: ";
+    submitNewCommentBtn.textContent = "Submit";
     prevButton.textContent = "Previous";
     nextButton.textContent = "Next";
 
@@ -325,6 +348,10 @@ function renderComments(ticketId, comments, commentsEl, page) {
 
     prevButton.disabled = comments.first;
     nextButton.disabled = comments.last;
+
+    submitNewCommentBtn.addEventListener("click", () => {
+        createComment(ticketId, newComment.value, "Hardcoded user", commentsEl);
+    })
 
     prevButton.addEventListener("click", () => {
         getComments(ticketId, commentsEl, page - 1);
