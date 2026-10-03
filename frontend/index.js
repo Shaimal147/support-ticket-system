@@ -84,7 +84,7 @@ async function getComments(ticketId, commentsEl, page = 0) {
     try {
         const response = await axios.get(`http://localhost:8080/tickets/${ticketId}/comments`);
         console.log(response.data);
-        renderComments(response.data.content, commentsEl);
+        renderComments(ticketId, response.data, commentsEl, page);
     } catch (error) {
         console.log("Error: ", error.message);
     }
@@ -294,10 +294,13 @@ function renderTicketForm() {
     })
 }
 
-function renderComments(comments, commentsEl) {
+function renderComments(ticketId, comments, commentsEl, page) {
     commentsEl.innerHTML = "";
 
-    for (const comment of comments) {
+    const prevButton = document.createElement("button");
+    const nextButton = document.createElement("button");
+
+    for (const comment of comments.content) {
         const commentAuthor = document.createElement("h3");
         const commentContent = document.createElement("p");
         const commentCreatedAt = document.createElement("p");
@@ -310,4 +313,21 @@ function renderComments(comments, commentsEl) {
         commentsEl.appendChild(commentContent);
         commentsEl.appendChild(commentCreatedAt);
     }
+
+    prevButton.textContent = "Previous";
+    nextButton.textContent = "Next";
+
+    commentsEl.appendChild(prevButton);
+    commentsEl.appendChild(nextButton);
+
+    prevButton.disabled = comments.first;
+    nextButton.disabled = comments.last;
+
+    prevButton.addEventListener("click", () => {
+        getComments(ticketId, commentsEl, page - 1);
+    })
+
+    nextButton.addEventListener("click", () => {
+        getComments(ticketId, commentsEl, page + 1)
+    })
 }
