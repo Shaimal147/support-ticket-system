@@ -13,10 +13,25 @@ createTicketBtn.addEventListener("click", () => {
     renderTicketForm();
 })
 
-async function getTickets(page = 0) {
+async function getTickets(status = null, priority = null, page = 0) {
     try {
-        const response = await axios.get(`http://localhost:8080/tickets?page=${page}&size=20`);
-        renderTickets(response.data.content);
+        const params = {
+            page: page,
+            size: 20
+        }
+        if (status && status != "") {
+            params.status = status;
+        }
+        if (priority && priority != "") {
+            params.priority = priority;
+        }
+        const response = await axios.get(
+            `http://localhost:8080/tickets`,
+            {
+                params: params
+            }
+        );
+        renderTickets(response.data.content, status, priority);
         renderPagination(response.data);
         console.log(response.data);
     } catch (error) {
@@ -106,8 +121,42 @@ async function createComment(ticketId, content, author, commentsEl) {
     }
 }
 
-function renderTickets(tickets) {
+function renderTickets(tickets, status, priority) {
      ticketsEl.innerHTML = "";
+
+     ticketsFilterByStatus = document.createElement("select");
+     filterStatusOption0 = document.createElement("option");
+     filterStatusOption1 = document.createElement("option");
+     filterStatusOption2 = document.createElement("option");
+     filterStatusOption3 = document.createElement("option");
+     filterStatusOption4 = document.createElement("option");
+
+     filterStatusOption1.value = "";
+     filterStatusOption1.textContent = "No filter";
+
+     filterStatusOption1.value = "OPEN";
+     filterStatusOption1.textContent = "Open";
+
+     filterStatusOption2.value = "IN_PROGRESS";
+     filterStatusOption2.textContent = "In Progress";
+
+     filterStatusOption3.value = "RESOLVED";
+     filterStatusOption3.textContent = "Resolved";
+
+     filterStatusOption4.value = "CLOSED";
+     filterStatusOption4.textContent = "Closed";
+
+     ticketsEl.appendChild(ticketsFilterByStatus);
+     ticketsFilterByStatus.appendChild(filterStatusOption0);
+     ticketsFilterByStatus.appendChild(filterStatusOption1);
+     ticketsFilterByStatus.appendChild(filterStatusOption1);
+     ticketsFilterByStatus.appendChild(filterStatusOption2);
+     ticketsFilterByStatus.appendChild(filterStatusOption3);
+     ticketsFilterByStatus.appendChild(filterStatusOption4);
+
+     ticketsFilterByStatus.addEventListener("change", () => {
+        getTickets(ticketsFilterByStatus.value);
+     })
 
     for (const item of tickets) {
         const ticketTitle = document.createElement("h2");
@@ -130,7 +179,7 @@ function renderTickets(tickets) {
         statusOption1.textContent = "Open";
 
         statusOption2.value = "IN_PROGRESS";
-        statusOption2.textContent = "In_Progress";
+        statusOption2.textContent = "In Progress";
 
         statusOption3.value = "RESOLVED";
         statusOption3.textContent = "Resolved";
