@@ -1,5 +1,6 @@
 const ticketsEl = document.getElementById("tickets-el");
 const paginationEl = document.getElementById("pagination-el");
+const getTicketForm = document.getElementById("getTicketForm");
 
 async function getTickets(page = 0) {
     try {
@@ -60,4 +61,44 @@ function renderPagination(pagination) {
         getTickets(pagination.number + 1);
     });
 
+}
+
+getTicketForm,addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const ticketIdEl = document.getElementById("ticketId-el").value;
+    getTicket(ticketIdEl);
+})
+
+async function getTicket(id) {
+    try {
+        const response = await axios.get(`http://localhost:8080/tickets/${id}`);
+        renderTicket(response.data);
+        console.log(response.data);
+    } catch (error) {
+        console.log("Error: ", error.message);
+    }
+}
+
+function renderTicket(ticket) {
+    ticketsEl.innerHTML = "";
+
+    const ticketTitle = document.createElement("h2");
+    const ticketDescription = document.createElement("p");
+    const ticketPriority = document.createElement("p");
+    const ticketStatus = document.createElement("p");
+    const ticketCreatedAt = document.createElement("p");
+
+    ticketTitle.textContent = `Title: ${ticket.title}`;
+    ticketDescription.textContent = `Description: ${ticket.description}`;
+    ticketPriority.textContent = `Priority: ${ticket.priority}`;
+    ticketStatus.textContent = `Status: ${ticket.status}`;
+    ticketCreatedAt.textContent = `Created at: ${ticket.createdAt}`;
+
+    ticketsEl.appendChild(ticketTitle);
+    ticketsEl.appendChild(ticketDescription);
+    ticketsEl.appendChild(ticketPriority);
+    ticketsEl.appendChild(ticketStatus);
+    ticketsEl.appendChild(ticketCreatedAt);
+    ticketsEl.appendChild(document.createElement("hr"));
 }
