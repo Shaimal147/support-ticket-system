@@ -42,6 +42,16 @@ async function createTicket(title, desciption, priority, createdBy) {
     }
 }
 
+async function deleteTicket(ticketId) {
+    try {
+        const response = await axios.delete(`http://localhost:8080/tickets/${ticketId}`);
+        console.log(response.data);
+        getTickets();
+    } catch (error) {
+        console.log("Error: ", error.message);
+    }
+}
+
 async function updateTicketStatus(ticketId, status) {
     try {
         const response = await axios.put(
@@ -87,6 +97,7 @@ function renderTickets(tickets) {
         const statusOption3 = document.createElement("option");
         const statusOption4 = document.createElement("option");
         const ticketCreatedAt = document.createElement("p");
+        const ticketDeleteBtn = document.createElement("button")
 
         statusOption1.value = "OPEN";
         statusOption1.textContent = "Open";
@@ -115,6 +126,7 @@ function renderTickets(tickets) {
         ticketTitle.textContent = `Title: ${item.title}`;
         ticketDescription.textContent = `Description: ${item.description}`;
         ticketCreatedAt.textContent = `Created at: ${item.createdAt}`;
+        ticketDeleteBtn.innerText = "Delete ticket"
 
         ticketsEl.appendChild(ticketTitle);
         ticketsEl.appendChild(ticketDescription);
@@ -133,6 +145,7 @@ function renderTickets(tickets) {
         ticketPriority.value = item.priority;
 
         ticketsEl.appendChild(ticketCreatedAt);
+        ticketsEl.appendChild(ticketDeleteBtn);
         ticketsEl.appendChild(document.createElement("hr"));
 
         ticketStatus.addEventListener("change", () => {
@@ -141,6 +154,10 @@ function renderTickets(tickets) {
 
         ticketPriority.addEventListener("change", () => {
             updateTicketPriority(item.id, ticketPriority.value);
+        })
+
+        ticketDeleteBtn.addEventListener("click", () => {
+            deleteTicket(item.id);
         })
     }
 }
