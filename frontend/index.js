@@ -56,13 +56,31 @@ async function updateTicketStatus(ticketId, status) {
     }
 }
 
+async function updateTicketPriority(ticketId, priority) {
+    try {
+        const response = await axios.put(
+            `http://localhost:8080/tickets/${ticketId}/priority`,
+            {
+                priority: priority
+            }
+        );
+        console.log(response.data);
+    } catch (error) {
+        console.log("Error: ", error.message);
+    }
+}
+
 function renderTickets(tickets) {
      ticketsEl.innerHTML = "";
 
     for (const item of tickets) {
         const ticketTitle = document.createElement("h2");
         const ticketDescription = document.createElement("p");
-        const ticketPriority = document.createElement("p");
+        const ticketPriority = document.createElement("select");
+        const priorityOption1 = document.createElement("Option");
+        const priorityOption2 = document.createElement("Option");
+        const priorityOption3 = document.createElement("Option");
+        const priorityOption4 = document.createElement("Option");
         const ticketStatus = document.createElement("select");
         const statusOption1 = document.createElement("option");
         const statusOption2 = document.createElement("option");
@@ -82,9 +100,20 @@ function renderTickets(tickets) {
         statusOption4.value = "CLOSED";
         statusOption4.textContent = "Closed";
 
+        priorityOption1.value = "LOW";
+        priorityOption1.textContent = "Low";
+
+        priorityOption2.value = "MEDIUM";
+        priorityOption2.textContent = "Medium";
+        
+        priorityOption3.value = "HIGH";
+        priorityOption3.textContent = "High";
+
+        priorityOption4.value = "URGENT";
+        priorityOption4.textContent = "Urgent";
+
         ticketTitle.textContent = `Title: ${item.title}`;
         ticketDescription.textContent = `Description: ${item.description}`;
-        ticketPriority.textContent = `Priority: ${item.priority}`;
         ticketCreatedAt.textContent = `Created at: ${item.createdAt}`;
 
         ticketsEl.appendChild(ticketTitle);
@@ -95,14 +124,23 @@ function renderTickets(tickets) {
         ticketStatus.appendChild(statusOption2);
         ticketStatus.appendChild(statusOption3);
         ticketStatus.appendChild(statusOption4);
+        ticketPriority.appendChild(priorityOption1);
+        ticketPriority.appendChild(priorityOption2);
+        ticketPriority.appendChild(priorityOption3);
+        ticketPriority.appendChild(priorityOption4);
 
         ticketStatus.value = item.status;
-        
+        ticketPriority.value = item.priority;
+
         ticketsEl.appendChild(ticketCreatedAt);
         ticketsEl.appendChild(document.createElement("hr"));
 
         ticketStatus.addEventListener("change", () => {
-        updateTicketStatus(item.id, ticketStatus.value);
+            updateTicketStatus(item.id, ticketStatus.value);
+        })
+
+        ticketPriority.addEventListener("change", () => {
+            updateTicketPriority(item.id, ticketPriority.value);
         })
     }
 }
