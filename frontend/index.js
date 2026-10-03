@@ -82,7 +82,7 @@ async function updateTicketPriority(ticketId, priority) {
 
 async function getComments(ticketId, commentsEl, page = 0) {
     try {
-        const response = await axios.get(`http://localhost:8080/tickets/${ticketId}/comments`);
+        const response = await axios.get(`http://localhost:8080/tickets/${ticketId}/comments?page=${page}`);
         console.log(response.data);
         renderComments(ticketId, response.data, commentsEl, page);
     } catch (error) {
