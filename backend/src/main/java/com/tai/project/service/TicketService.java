@@ -10,6 +10,8 @@ import com.tai.project.dto.AddCommentDto;
 import com.tai.project.repository.CommentRepository;
 import com.tai.project.repository.TicketRepository;
 
+import jakarta.transaction.Transactional;
+
 import com.tai.project.entity.TicketEntity;
 import com.tai.project.entity.CommentEntity;
 import com.tai.project.enums.TicketPriority;
@@ -158,11 +160,13 @@ public class TicketService {
         return "Priority changed successfully";
     }
 
+    @Transactional
     public String deleteTicket(Long id) {
-        if (!ticketRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id));
-        };
+        TicketEntity ticket = ticketRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Ticket not found with ID: %d".formatted(id))
+        );
 
+        commentRepository.deleteByTicket(ticket);
         ticketRepository.deleteById(id);
         return "Successfully deleted";
     }

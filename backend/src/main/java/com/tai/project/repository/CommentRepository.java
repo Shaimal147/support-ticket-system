@@ -9,4 +9,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Long>{
     Page<CommentEntity> findByTicket(TicketEntity ticket, Pageable pageable);
+    void deleteByTicket(TicketEntity ticket);
 }
