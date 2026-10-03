@@ -227,6 +227,7 @@ function renderTicket(ticket) {
     const ticketPriority = document.createElement("p");
     const ticketStatus = document.createElement("p");
     const ticketCreatedAt = document.createElement("p");
+    const commentsEl = document.createElement("div");
 
     ticketTitle.textContent = `Title: ${ticket.title}`;
     ticketDescription.textContent = `Description: ${ticket.description}`;
@@ -239,6 +240,8 @@ function renderTicket(ticket) {
     ticketsEl.appendChild(ticketPriority);
     ticketsEl.appendChild(ticketStatus);
     ticketsEl.appendChild(ticketCreatedAt);
+    ticketsEl.appendChild(commentsEl);
+    getComments(ticket.id, commentsEl);
     ticketsEl.appendChild(document.createElement("hr"));
 }
 
