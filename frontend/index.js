@@ -1,6 +1,17 @@
+const getTicketsBtn = document.getElementById("getTickets-btn");
+const createTicketBtn = document.getElementById("createTicket-btn");
 const ticketsEl = document.getElementById("tickets-el");
 const paginationEl = document.getElementById("pagination-el");
 const getTicketForm = document.getElementById("getTicketForm");
+const createTicketForm = document.getElementById("createTicketForm");
+
+getTicketsBtn.addEventListener("click", () => {
+    getTickets();
+})
+
+createTicketBtn.addEventListener("click", () => {
+    renderTicketForm();
+})
 
 async function getTickets(page = 0) {
     try {
@@ -10,6 +21,24 @@ async function getTickets(page = 0) {
         console.log(response.data);
     } catch (error) {
         console.error("Error: ", error.message);
+    }
+}
+
+async function createTicket(title, desciption, priority, createdBy) {
+    try {
+        const response = await axios.post(
+            `http://localhost:8080/tickets`,
+            {
+                title: title,
+                description: desciption,
+                priority: priority,
+                createdBy: createdBy
+            }
+        );
+
+        console.log(response.data)
+    } catch (error) {
+        console.log("Error: ", error.message);
     }
 }
 
@@ -63,7 +92,7 @@ function renderPagination(pagination) {
 
 }
 
-getTicketForm,addEventListener("submit", function (event) {
+getTicketForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
     const ticketIdEl = document.getElementById("ticketId-el").value;
@@ -101,4 +130,56 @@ function renderTicket(ticket) {
     ticketsEl.appendChild(ticketStatus);
     ticketsEl.appendChild(ticketCreatedAt);
     ticketsEl.appendChild(document.createElement("hr"));
+}
+
+function renderTicketForm() {
+    createTicketForm.innerHTML = "";
+
+    const ticketTitle = document.createElement("input");
+    ticketTitle.placeholder = "Title";
+
+    const ticketDescription = document.createElement("input");
+    ticketDescription.placeholder = "Description";
+
+    const ticketPriority = document.createElement("Select");
+    const priorityOption1 = document.createElement("option");
+    const priorityOption2 = document.createElement("option");
+    const priorityOption3 = document.createElement("option");
+    const priorityOption4 = document.createElement("option");
+    priorityOption1.value = "LOW";
+    priorityOption1.textContent = "Low";
+    priorityOption2.value = "MEDIUM";
+    priorityOption2.textContent = "Medium";
+    priorityOption3.value = "HIGH";
+    priorityOption3.textContent = "High";
+    priorityOption4.value = "URGENT";
+    priorityOption4.textContent = "Urgent";
+
+    const name = document.createElement("input");
+    name.placeholder = "Name";
+
+    const createTicketSubmitBtn = document.createElement("button");
+    createTicketSubmitBtn.type = "submit";
+    createTicketSubmitBtn.innerText = "Submit";
+
+    createTicketForm.appendChild(ticketTitle);
+    createTicketForm.appendChild(ticketDescription);
+    createTicketForm.appendChild(ticketPriority);
+    ticketPriority.appendChild(priorityOption1);
+    ticketPriority.appendChild(priorityOption2);
+    ticketPriority.appendChild(priorityOption3);
+    ticketPriority.appendChild(priorityOption4);
+    createTicketForm.appendChild(name);
+    createTicketForm.appendChild(createTicketSubmitBtn);
+
+
+
+    createTicketSubmitBtn.addEventListener("click", () => {
+        createTicket(
+            ticketTitle.value,
+            ticketDescription.value,
+            ticketPriority.value,
+            name.value
+        );
+    })
 }
